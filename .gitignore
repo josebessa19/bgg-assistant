@@ -10,4 +10,5 @@ __pycache__/
 rulebooks/*.pdf
 kaggle.json
 .venv/
-*.egg-info/
+tools/hadoop/bin/*.exe
+tools/hadoop/bin/*.dll

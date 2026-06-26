@@ -1,0 +1,29 @@
+Metadata-Version: 2.4
+Name: bgg-assistant
+Version: 0.1.0
+Requires-Python: >=3.11
+License-File: LICENSE
+Requires-Dist: fastapi>=0.111
+Requires-Dist: uvicorn[standard]>=0.30
+Requires-Dist: pydantic-settings>=2.3
+Requires-Dist: mlflow<3,>=2.14
+Requires-Dist: streamlit>=1.35
+Requires-Dist: httpx>=0.27
+Requires-Dist: pandas>=2.2
+Requires-Dist: pyarrow>=16.0
+Provides-Extra: spark
+Requires-Dist: pyspark<4,>=3.5; extra == "spark"
+Provides-Extra: rag
+Requires-Dist: chromadb>=0.5; extra == "rag"
+Requires-Dist: langchain>=0.2; extra == "rag"
+Requires-Dist: langchain-community>=0.2; extra == "rag"
+Requires-Dist: sentence-transformers>=3.0; extra == "rag"
+Requires-Dist: pymupdf>=1.24; extra == "rag"
+Provides-Extra: dev
+Requires-Dist: pytest>=8.0; extra == "dev"
+Requires-Dist: pytest-mock>=3.14; extra == "dev"
+Requires-Dist: ruff>=0.4; extra == "dev"
+Requires-Dist: jupyter>=1.0; extra == "dev"
+Requires-Dist: ipykernel>=6.29; extra == "dev"
+Requires-Dist: kaggle>=1.6; extra == "dev"
+Dynamic: license-file

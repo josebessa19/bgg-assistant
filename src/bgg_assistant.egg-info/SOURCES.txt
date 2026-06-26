@@ -1,0 +1,17 @@
+LICENSE
+README.md
+pyproject.toml
+src/bgg/__init__.py
+src/bgg/config.py
+src/bgg/api/__init__.py
+src/bgg/preprocessing/__init__.py
+src/bgg/preprocessing/games.py
+src/bgg/preprocessing/ratings.py
+src/bgg/preprocessing/spark.py
+src/bgg/rag/__init__.py
+src/bgg/recommender/__init__.py
+src/bgg_assistant.egg-info/PKG-INFO
+src/bgg_assistant.egg-info/SOURCES.txt
+src/bgg_assistant.egg-info/dependency_links.txt
+src/bgg_assistant.egg-info/requires.txt
+src/bgg_assistant.egg-info/top_level.txt

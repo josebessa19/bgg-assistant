@@ -94,7 +94,7 @@ flowchart LR
 | Step | Document | Status |
 |------|----------|--------|
 | 01 | [Project Setup](steps/01-project-setup.md) | ☑ |
-| 02 | [Data & EDA](steps/02-data-and-eda.md) | ☐ |
+| 02 | [Data & EDA](steps/02-data-and-eda.md) | ☑ |
 | 03 | [Recommender](steps/03-recommender.md) | ☐ |
 | 04 | [RAG Pipeline](steps/04-rag-pipeline.md) | ☐ |
 | 05 | [API & Frontend](steps/05-api-and-frontend.md) | ☐ |

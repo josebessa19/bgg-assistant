@@ -1,0 +1,10 @@
+{
+  "terminal.integrated.env.windows": {
+    "JAVA_HOME": "C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.19.10-hotspot",
+    "PATH": "C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.19.10-hotspot\\bin;${env:PATH}"
+  },
+  "jupyter.jupyterServerEnvVariables": {
+    "JAVA_HOME": "C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.19.10-hotspot",
+    "PATH": "C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.19.10-hotspot\\bin;${env:PATH}"
+  }
+}

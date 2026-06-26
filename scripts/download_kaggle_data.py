@@ -1,17 +1,13 @@
-"""Download BGG dataset from Kaggle into data/raw/.
+"""Download optional BGG datasets from Kaggle into data/raw/.
 
-Dataset: mshepherd/board-games (Recommend.Games / board-game-scraper subset)
+Primary raw files for this project (placed manually in data/raw/):
+  - games_detailed_info2025.csv — game metadata (~28k rows, BGG API-style columns)
+  - bgg-26m-reviews.csv         — user ratings + reviews (~26M rows)
+
+Optional Kaggle fallback: mshepherd/board-games
 https://www.kaggle.com/datasets/mshepherd/board-games
 
 Credentials: ~/.kaggle/access_token or ~/.kaggle/kaggle.json (not stored in this repo)
-
-Files in data/raw/ (as of 2026-06):
-  - bga_GameItem.csv  — game metadata (~124k rows): bgg_id, name, players, time,
-    category, mechanic, cooperative, bayes_rating, complexity, etc.
-
-Optional from same Kaggle dataset (needed for ALS in Step 03):
-  - bgg_RatingItem.csv — user–game ratings (large; download when training recommender)
-  - bgg_GameItem.csv   — BGG-only game table (alternative to bga_GameItem)
 
 Manual download: place CSVs in data/raw/ if the CLI is unavailable.
 """

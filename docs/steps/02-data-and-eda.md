@@ -22,29 +22,23 @@ Explore the BGG dataset with PySpark, define the canonical feature schema, and e
 **Subtasks:**
 
 1. Create `notebooks/01_eda.ipynb`
-2. First cell — Spark config for local dev:
+2. First cell — use shared Spark builder (1g driver, Windows-safe):
 
 ```python
-from pyspark.sql import SparkSession
+from bgg.preprocessing.spark import build_spark
 
-spark = (
-    SparkSession.builder
-    .appName("bgg-eda")
-    .master("local[*]")
-    .config("spark.driver.memory", "4g")
-    .config("spark.sql.shuffle.partitions", "8")
-    .config("spark.sql.parquet.compression.codec", "snappy")
-    .getOrCreate()
-)
+spark = build_spark("bgg-eda")
 spark.sparkContext.setLogLevel("WARN")
 ```
 
-3. Load raw CSVs from `data/raw/` — primary games file: `bga_GameItem.csv` (columns: `bgg_id`, `name`, `min_players`, `max_players`, `min_time`, `max_time`, `category`, `mechanic`, `cooperative`, `bayes_rating`, `complexity`). Download `bgg_RatingItem.csv` from the same Kaggle dataset before ALS work in Step 03.
+On **32-bit Java** (common on Windows), do not set `spark.driver.memory` above `1g` — larger values fail with `Invalid maximum heap size`.
+
+3. Load raw CSVs from `data/raw/` — primary games file: `games_detailed_info2025.csv` (columns: `id`, `name`, `minplayers`, `maxplayers`, `playingtime`, `averageweight`, `average`, `bayesaverage`, `usersrated`, `boardgamemechanic`, `boardgamecategory`, …). Ratings file: `bgg-26m-reviews.csv` (`user`, `rating`, `ID`; drop `comment` and `name` when loading).
 4. Print schema and row counts for each table
 
 **Checkpoint:**
 
-- [ ] SparkSession starts without OOM on laptop (reduce `driver.memory` to `2g` if needed)
+- [ ] SparkSession starts without OOM on laptop (`build_spark()` uses `1g` by default)
 
 ---
 
@@ -229,6 +223,47 @@ assert ratings.select("game_id").distinct().count() > 1000
 Mark Step 02 complete in [docs/README.md](../README.md).
 
 **Next:** [03-recommender](03-recommender.md)
+
+---
+
+## Canonical schema (implemented)
+
+Source files: `games_detailed_info2025.csv`, `bgg-26m-reviews.csv`
+
+### `games_features`
+
+| Column | Type | Source / transform |
+|--------|------|-------------------|
+| `game_id` | int | `id` |
+| `name` | string | `name` |
+| `min_players` | int | `minplayers`; clamp 1–20 |
+| `max_players` | int | `maxplayers`; clamp 1–20 |
+| `playing_time` | int | `playingtime` |
+| `min_play_time` | int | `minplaytime` or `playingtime` |
+| `max_play_time` | int | `maxplaytime` or `playingtime` |
+| `avg_weight` | float | `averageweight` |
+| `avg_rating` | float | `average` |
+| `bayes_average` | float | `bayesaverage` |
+| `num_ratings` | int | `usersrated` |
+| `year_published` | int | `yearpublished` (1900–2026) |
+| `mechanics` | array&lt;string&gt; | Spark `regexp_replace` + `split` on `boardgamemechanic` |
+| `categories` | array&lt;string&gt; | Spark `regexp_replace` + `split` on `boardgamecategory` |
+| `is_cooperative` | boolean | `array_contains(mechanics, "Cooperative Game")` |
+| `designers` | array&lt;string&gt; | `boardgamedesigner` (parsed list) |
+| `publishers` | array&lt;string&gt; | `boardgamepublisher` (parsed list) |
+
+### `ratings_implicit`
+
+| Column | Type | Transform |
+|--------|------|-----------|
+| `user_id` | int | `hash_pandas_object(user)` (chunked export) |
+| `game_id` | int | `ID` (join to `games_features.game_id`) |
+| `rating` | float | 1–10 scale |
+| `implicit_strength` | float | `rating / 10.0` |
+
+Implementation: `src/bgg/preprocessing/games.py`, `src/bgg/preprocessing/ratings.py`, `src/bgg/preprocessing/export.py`, `scripts/preprocess_to_parquet.py`
+
+Note: Spark transforms games in-memory; Parquet export uses PyArrow (avoids Windows Hadoop NativeIO issues). Reviews are written in pandas chunks.
 
 ---
 
